@@ -246,16 +246,11 @@
             // Callback de tooltip personalizado para el gráfico de Transporte
             const transporteTooltipCallback = {
                 label: function(context) {
-                    // Lógica estándar para la línea de porcentaje
                     if (context.dataset.yAxisID === 'y1') {
                         return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}%`;
                     }
-                    
-                    // Lógica para las barras
                     const label = context.dataset.label || '';
                     let fullLabel = `${label}: ${context.parsed.y.toLocaleString('es-BO')}`;
-                    
-                    // Añadir detalle solo para la cuenta 'Sueldos Y Jornales'
                     if (context.label === 'Sueldos Y Jornales') {
                         return [
                             fullLabel,
@@ -263,14 +258,33 @@
                             '  - 2 Empleados Huevo LPZ'
                         ];
                     }
-                    
+                    return fullLabel;
+                }
+            };
+
+            // Callback de tooltip personalizado para el gráfico de Almacenamiento
+            const almacenamientoTooltipCallback = {
+                label: function(context) {
+                    if (context.dataset.yAxisID === 'y1') {
+                        return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}%`;
+                    }
+                    const label = context.dataset.label || '';
+                    let fullLabel = `${label}: ${context.parsed.y.toLocaleString('es-BO')}`;
+                    if (context.label === 'Sueldos Y Jornales') {
+                        return [
+                            fullLabel,
+                            '  - 2 EMPLEADOS HUEVO CBBA',
+                            '  - 1 EMPLEADO HUEVO LPZ',
+                            '  - 3 EMPLEADOS HUEVO SCZ'
+                        ];
+                    }
                     return fullLabel;
                 }
             };
 
             // Renderizar gráficos Pareto
             createParetoChart('paretoChartTransporte', datosCuentasTransporte, true, transporteTooltipCallback);
-            createParetoChart('paretoChartAlmacenamiento', datosCuentasAlmacenamiento);
+            createParetoChart('paretoChartAlmacenamiento', datosCuentasAlmacenamiento, false, almacenamientoTooltipCallback);
 
             // Configurar el botón de plegar/desplegar todo
             const toggleBtn = document.getElementById('toggle-all-button');
