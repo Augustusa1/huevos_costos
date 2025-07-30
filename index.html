@@ -42,7 +42,7 @@
             </button>
         </div>
 
-        <!-- Contenedor principal para las tablas -->
+        <!-- Contenedor principal para las tablas y gráficos -->
         <div class="space-y-12">
 
             <!-- Sección para Bs/Kg -->
@@ -65,11 +65,19 @@
                 </div>
             </section>
 
-            <!-- Nueva Sección para Gráfico Pareto -->
+            <!-- Sección para Gráfico Pareto Transporte -->
             <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-red-200">
                 <h2 class="text-2xl font-bold text-red-700 mb-6 text-center">Análisis Pareto de Cuentas de Transporte Nacional</h2>
                 <div class="chart-container">
-                    <canvas id="paretoChart"></canvas>
+                    <canvas id="paretoChartTransporte"></canvas>
+                </div>
+            </section>
+
+            <!-- Nueva Sección para Gráfico Pareto Almacenamiento -->
+            <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-red-200">
+                <h2 class="text-2xl font-bold text-red-700 mb-6 text-center">Análisis Pareto de Cuentas de Almacenamiento Nacional</h2>
+                <div class="chart-container">
+                    <canvas id="paretoChartAlmacenamiento"></canvas>
                 </div>
             </section>
 
@@ -93,39 +101,21 @@
             { mes: 'jun. 2025', transp_kg: 0.42, alm_kg: 0.38, transp_maple: 0.76, alm_maple: 0.68 },
         ];
 
-        // --- 2. Datos para Gráfico Pareto (Cuentas Transporte) ---
-        const datosCuentas = [
-            { cuenta: 'Sueldos Y Jornales', valor: 174751 },
-            { cuenta: 'Sistemas tecnologicos', valor: 25282 },
-            { cuenta: 'Servicios Externos', valor: 18745 },
-            { cuenta: 'Seguros Gral, Fletes De Producto', valor: 2864601 },
-            { cuenta: 'Ropa De Trabajo', valor: 122 },
-            { cuenta: 'Pasajes Y Viaticos', valor: 2942 },
-            { cuenta: 'Materiales Escritorio Y Suministros', valor: 645 },
-            { cuenta: 'Material Y Prod.Limpieza', valor: 947 },
-            { cuenta: 'Mantenimiento Y Repuestos', valor: 105 },
-            { cuenta: 'Horas Extras', valor: 51282 },
-            { cuenta: 'Gastos Medicos Y Capacitacion', valor: 4216 },
-            { cuenta: 'Gastos legales y tributarios', valor: 8490 },
-            { cuenta: 'Gastos Generales', valor: 6658 },
-            { cuenta: 'Gastos De Alimentacion', valor: 21884 },
-            { cuenta: 'Envases', valor: 273 },
-            { cuenta: 'Depreciacion', valor: 440 },
-            { cuenta: 'Costo de Servicios Internos', valor: 81313 },
-            { cuenta: 'Costo Almacenaje Mat. Y Sum.', valor: 1421 },
-            { cuenta: 'Cconectividad y comunicaciones', valor: 2071 },
-            { cuenta: 'Beneficios Sociales', valor: 153302 },
-            { cuenta: 'Baja De Productos', valor: 3344 },
+        // --- 2. Datos para Gráficos Pareto ---
+        const datosCuentasTransporte = [
+            { cuenta: 'Sueldos Y Jornales', valor: 174751 }, { cuenta: 'Sistemas tecnologicos', valor: 25282 }, { cuenta: 'Servicios Externos', valor: 18745 }, { cuenta: 'Seguros Gral, Fletes De Producto', valor: 2864601 }, { cuenta: 'Ropa De Trabajo', valor: 122 }, { cuenta: 'Pasajes Y Viaticos', valor: 2942 }, { cuenta: 'Materiales Escritorio Y Suministros', valor: 645 }, { cuenta: 'Material Y Prod.Limpieza', valor: 947 }, { cuenta: 'Mantenimiento Y Repuestos', valor: 105 }, { cuenta: 'Horas Extras', valor: 51282 }, { cuenta: 'Gastos Medicos Y Capacitacion', valor: 4216 }, { cuenta: 'Gastos legales y tributarios', valor: 8490 }, { cuenta: 'Gastos Generales', valor: 6658 }, { cuenta: 'Gastos De Alimentacion', valor: 21884 }, { cuenta: 'Envases', valor: 273 }, { cuenta: 'Depreciacion', valor: 440 }, { cuenta: 'Costo de Servicios Internos', valor: 81313 }, { cuenta: 'Costo Almacenaje Mat. Y Sum.', valor: 1421 }, { cuenta: 'Cconectividad y comunicaciones', valor: 2071 }, { cuenta: 'Beneficios Sociales', valor: 153302 }, { cuenta: 'Baja De Productos', valor: 3344 },
+        ];
+        
+        const datosCuentasAlmacenamiento = [
+            { cuenta: 'Sueldos Y Jornales', valor: 429410 }, { cuenta: 'Sistemas tecnologicos', valor: 7257 }, { cuenta: 'Servicios Externos', valor: 419101 }, { cuenta: 'Ropa De Trabajo', valor: 11272 }, { cuenta: 'Pasajes Y Viaticos', valor: 1292 }, { cuenta: 'Materiales Escritorio Y Suministros', valor: 35400 }, { cuenta: 'Material Y Prod.Limpieza', valor: 4903 }, { cuenta: 'Mantenimiento Y Repuestos', valor: 34376 }, { cuenta: 'Horas Extras', valor: 79431 }, { cuenta: 'Gastos Medicos Y Capacitacion', valor: 8198 }, { cuenta: 'Gastos legales y tributarios', valor: 10230 }, { cuenta: 'Gastos Generales', valor: 16655 }, { cuenta: 'Gastos De Alimentacion', valor: 32920 }, { cuenta: 'Envases', valor: 557 }, { cuenta: 'Energia Electrica Y Agua', valor: 48001 }, { cuenta: 'Depreciacion', valor: 183801 }, { cuenta: 'Costo de Servicios Internos', valor: 50042 }, { cuenta: 'Costo Almacenaje Mat. Y Sum.', valor: 5171 }, { cuenta: 'Cconectividad y comunicaciones', valor: 5382 }, { cuenta: 'Beneficios Sociales', valor: 415971 }, { cuenta: 'Baja De Productos', valor: 27529 },
         ];
 
         // --- 3. Función para generar las tablas de KPI ---
         const createKpiTable = (containerId, unit) => {
             const container = document.getElementById(containerId);
             if (!container) return;
-
             const transpKey = `transp_${unit}`;
             const almKey = `alm_${unit}`;
-
             const monthsHeader = datosLogistica.map(d => `<th class="p-3 text-sm font-semibold tracking-wide text-left">${d.mes}</th>`).join('');
             const transportCosts = datosLogistica.map(d => `<td class="p-3 text-sm text-gray-700 whitespace-nowrap">${d[transpKey].toFixed(2)}</td>`).join('');
             const storageCosts = datosLogistica.map(d => `<td class="p-3 text-sm text-gray-700 whitespace-nowrap">${d[almKey].toFixed(2)}</td>`).join('');
@@ -133,7 +123,6 @@
                 const total = d[transpKey] + d[almKey];
                 return `<td class="p-3 text-sm font-bold text-gray-900 whitespace-nowrap">${total.toFixed(2)}</td>`;
             }).join('');
-
             const tableHTML = `
                 <table class="w-full kpi-table">
                     <thead class="bg-red-100">
@@ -161,15 +150,11 @@
             container.innerHTML = tableHTML;
         };
         
-        // --- 4. Función para crear el Gráfico Pareto ---
-        const createParetoChart = () => {
-            // Ordenar datos de mayor a menor
-            const sortedData = datosCuentas.sort((a, b) => b.valor - a.valor);
-            
+        // --- 4. Función genérica para crear Gráficos Pareto ---
+        const createParetoChart = (canvasId, data, title) => {
+            const sortedData = data.sort((a, b) => b.valor - a.valor);
             const labels = sortedData.map(d => d.cuenta);
             const values = sortedData.map(d => d.valor);
-            
-            // Calcular total y porcentaje acumulado
             const total = values.reduce((sum, value) => sum + value, 0);
             let cumulative = 0;
             const cumulativePercentage = values.map(value => {
@@ -177,7 +162,7 @@
                 return (cumulative / total) * 100;
             });
 
-            const ctx = document.getElementById('paretoChart').getContext('2d');
+            const ctx = document.getElementById(canvasId).getContext('2d');
             new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -205,72 +190,34 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
-                        x: {
-                            ticks: {
-                                autoSkip: false,
-                                maxRotation: 90,
-                                minRotation: 45
-                            }
-                        },
-                        y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            title: {
-                                display: true,
-                                text: 'Costo Total (Bs)'
-                            }
-                        },
-                        y1: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            min: 0,
-                            max: 100,
-                            title: {
-                                display: true,
-                                text: 'Porcentaje Acumulado (%)'
-                            },
-                            grid: {
-                                drawOnChartArea: false, // only-draw-grid-lines-for-one-axis
-                            },
-                        }
+                        x: { ticks: { autoSkip: false, maxRotation: 90, minRotation: 45 } },
+                        y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Costo Total (Bs)' } },
+                        y1: { type: 'linear', display: true, position: 'right', min: 0, max: 100, title: { display: true, text: 'Porcentaje Acumulado (%)' }, grid: { drawOnChartArea: false } }
                     },
-                    plugins: {
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                        },
-                    }
+                    plugins: { tooltip: { mode: 'index', intersect: false } }
                 }
             });
         };
 
         // --- 5. Renderizar todo al cargar la página ---
         window.onload = () => {
-            // Renderizar ambas tablas
+            // Renderizar tablas
             createKpiTable('table-container-kg', 'kg');
             createKpiTable('table-container-maple', 'maple');
             
-            // Renderizar el gráfico Pareto
-            createParetoChart();
+            // Renderizar gráficos Pareto
+            createParetoChart('paretoChartTransporte', datosCuentasTransporte);
+            createParetoChart('paretoChartAlmacenamiento', datosCuentasAlmacenamiento);
 
             // Configurar el botón de plegar/desplegar todo
             const toggleBtn = document.getElementById('toggle-all-button');
             let areDetailsVisible = true;
-
             toggleBtn.addEventListener('click', () => {
-                areDetailsVisible = !areDetailsVisible; // Invertir el estado
+                areDetailsVisible = !areDetailsVisible;
                 const allDetailRows = document.querySelectorAll('.kpi-details-row');
-                
                 allDetailRows.forEach(row => {
-                    if (areDetailsVisible) {
-                        row.classList.remove('hidden');
-                    } else {
-                        row.classList.add('hidden');
-                    }
+                    row.classList.toggle('hidden', !areDetailsVisible);
                 });
-
                 toggleBtn.textContent = areDetailsVisible ? 'Ocultar Detalles' : 'Mostrar Detalles';
             });
         };
