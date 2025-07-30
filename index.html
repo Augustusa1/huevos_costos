@@ -73,7 +73,7 @@
                 </div>
             </section>
 
-            <!-- Nueva Sección para Gráfico Pareto Almacenamiento -->
+            <!-- Sección para Gráfico Pareto Almacenamiento -->
             <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-red-200">
                 <h2 class="text-2xl font-bold text-red-700 mb-6 text-center">Análisis Pareto de Cuentas de Almacenamiento Nacional</h2>
                 <div class="chart-container">
@@ -103,11 +103,11 @@
 
         // --- 2. Datos para Gráficos Pareto ---
         const datosCuentasTransporte = [
-            { cuenta: 'Sueldos Y Jornales', valor: 174751 }, { cuenta: 'Sistemas tecnologicos', valor: 25282 }, { cuenta: 'Servicios Externos', valor: 18745 }, { cuenta: 'Seguros Gral, Fletes De Producto', valor: 2864601 }, { cuenta: 'Ropa De Trabajo', valor: 122 }, { cuenta: 'Pasajes Y Viaticos', valor: 2942 }, { cuenta: 'Materiales Escritorio Y Suministros', valor: 645 }, { cuenta: 'Material Y Prod.Limpieza', valor: 947 }, { cuenta: 'Mantenimiento Y Repuestos', valor: 105 }, { cuenta: 'Horas Extras', valor: 51282 }, { cuenta: 'Gastos Medicos Y Capacitacion', valor: 4216 }, { cuenta: 'Gastos legales y tributarios', valor: 8490 }, { cuenta: 'Gastos Generales', valor: 6658 }, { cuenta: 'Gastos De Alimentacion', valor: 21884 }, { cuenta: 'Envases', valor: 273 }, { cuenta: 'Depreciacion', valor: 440 }, { cuenta: 'Costo de Servicios Internos', valor: 81313 }, { cuenta: 'Costo Almacenaje Mat. Y Sum.', valor: 1421 }, { cuenta: 'Cconectividad y comunicaciones', valor: 2071 }, { cuenta: 'Beneficios Sociales', valor: 153302 }, { cuenta: 'Baja De Productos', valor: 3344 },
+            { cuenta: 'Sueldos Y Jornales', valor: 10832 }, { cuenta: 'Sistemas tecnologicos', valor: 1993 }, { cuenta: 'Servicios Externos', valor: 1063 }, { cuenta: 'Seguros Gral, Fletes De Producto', valor: 163462 }, { cuenta: 'Ropa De Trabajo', valor: 24 }, { cuenta: 'Pasajes Y Viaticos', valor: 294 }, { cuenta: 'Materiales Escritorio Y Suministros', valor: 45 }, { cuenta: 'Material Y Prod.Limpieza', valor: 119 }, { cuenta: 'Mantenimiento Y Repuestos', valor: 52 }, { cuenta: 'Horas Extras', valor: 2867 }, { cuenta: 'Gastos Medicos Y Capacitacion', valor: 277 }, { cuenta: 'Gastos legales y tributarios', valor: 351 }, { cuenta: 'Gastos Generales', valor: 413 }, { cuenta: 'Gastos De Alimentacion', valor: 1189 }, { cuenta: 'Envases', valor: 0 }, { cuenta: 'Depreciacion', valor: 33 }, { cuenta: 'Costo de Servicios Internos', valor: 4365 }, { cuenta: 'Costo Almacenaje Mat. Y Sum.', valor: 52 }, { cuenta: 'Cconectividad y comunicaciones', valor: 152 }, { cuenta: 'Beneficios Sociales', valor: 9067 }, { cuenta: 'Baja De Productos', valor: 329 },
         ];
         
         const datosCuentasAlmacenamiento = [
-            { cuenta: 'Sueldos Y Jornales', valor: 429410 }, { cuenta: 'Sistemas tecnologicos', valor: 7257 }, { cuenta: 'Servicios Externos', valor: 419101 }, { cuenta: 'Ropa De Trabajo', valor: 11272 }, { cuenta: 'Pasajes Y Viaticos', valor: 1292 }, { cuenta: 'Materiales Escritorio Y Suministros', valor: 35400 }, { cuenta: 'Material Y Prod.Limpieza', valor: 4903 }, { cuenta: 'Mantenimiento Y Repuestos', valor: 34376 }, { cuenta: 'Horas Extras', valor: 79431 }, { cuenta: 'Gastos Medicos Y Capacitacion', valor: 8198 }, { cuenta: 'Gastos legales y tributarios', valor: 10230 }, { cuenta: 'Gastos Generales', valor: 16655 }, { cuenta: 'Gastos De Alimentacion', valor: 32920 }, { cuenta: 'Envases', valor: 557 }, { cuenta: 'Energia Electrica Y Agua', valor: 48001 }, { cuenta: 'Depreciacion', valor: 183801 }, { cuenta: 'Costo de Servicios Internos', valor: 50042 }, { cuenta: 'Costo Almacenaje Mat. Y Sum.', valor: 5171 }, { cuenta: 'Cconectividad y comunicaciones', valor: 5382 }, { cuenta: 'Beneficios Sociales', valor: 415971 }, { cuenta: 'Baja De Productos', valor: 27529 },
+            { cuenta: 'Sueldos Y Jornales', valor: 26015 }, { cuenta: 'Sistemas tecnologicos', valor: 1421 }, { cuenta: 'Servicios Externos', valor: 25449 }, { cuenta: 'Ropa De Trabajo', valor: 500 }, { cuenta: 'Pasajes Y Viaticos', valor: 61 }, { cuenta: 'Materiales Escritorio Y Suministros', valor: 2204 }, { cuenta: 'Material Y Prod.Limpieza', valor: 431 }, { cuenta: 'Mantenimiento Y Repuestos', valor: 5344 }, { cuenta: 'Horas Extras', valor: 4680 }, { cuenta: 'Gastos Medicos Y Capacitacion', valor: 527 }, { cuenta: 'Gastos legales y tributarios', valor: 496 }, { cuenta: 'Gastos Generales', valor: 1240 }, { cuenta: 'Gastos De Alimentacion', valor: 2048 }, { cuenta: 'Envases', valor: 0 }, { cuenta: 'Energia Electrica Y Agua', valor: 3763 }, { cuenta: 'Depreciacion', valor: 10619 }, { cuenta: 'Costo de Servicios Internos', valor: 2551 }, { cuenta: 'Costo Almacenaje Mat. Y Sum.', valor: 331 }, { cuenta: 'Cconectividad y comunicaciones', valor: 427 }, { cuenta: 'Beneficios Sociales', valor: 25109 }, { cuenta: 'Baja De Productos', valor: 2753 },
         ];
 
         // --- 3. Función para generar las tablas de KPI ---
@@ -150,8 +150,8 @@
             container.innerHTML = tableHTML;
         };
         
-        // --- 4. Función genérica para crear Gráficos Pareto ---
-        const createParetoChart = (canvasId, data, title) => {
+        // --- 4. Función genérica para crear Gráfico Pareto con opciones ---
+        const createParetoChart = (canvasId, data, useLogScale = false, customTooltipCallback = null) => {
             const sortedData = data.sort((a, b) => b.valor - a.valor);
             const labels = sortedData.map(d => d.cuenta);
             const values = sortedData.map(d => d.valor);
@@ -159,7 +159,7 @@
             let cumulative = 0;
             const cumulativePercentage = values.map(value => {
                 cumulative += value;
-                return (cumulative / total) * 100;
+                return total > 0 ? (cumulative / total) * 100 : 0;
             });
 
             const ctx = document.getElementById(canvasId).getContext('2d');
@@ -171,7 +171,7 @@
                         {
                             label: 'Costo por Cuenta',
                             data: values,
-                            backgroundColor: 'rgba(239, 68, 68, 0.6)', // Rojo
+                            backgroundColor: 'rgba(239, 68, 68, 0.6)',
                             borderColor: 'rgba(239, 68, 68, 1)',
                             borderWidth: 1,
                             yAxisID: 'y',
@@ -191,10 +191,48 @@
                     maintainAspectRatio: false,
                     scales: {
                         x: { ticks: { autoSkip: false, maxRotation: 90, minRotation: 45 } },
-                        y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Costo Total (Bs)' } },
-                        y1: { type: 'linear', display: true, position: 'right', min: 0, max: 100, title: { display: true, text: 'Porcentaje Acumulado (%)' }, grid: { drawOnChartArea: false } }
+                        y: { 
+                            type: useLogScale ? 'logarithmic' : 'linear',
+                            display: true, 
+                            position: 'left', 
+                            title: { 
+                                display: true, 
+                                text: useLogScale ? 'Costo Total (Bs) - Escala Logarítmica' : 'Costo Total (Bs)' 
+                            } 
+                        },
+                        y1: { 
+                            type: 'linear', 
+                            display: true, 
+                            position: 'right', 
+                            min: 0, 
+                            max: 100, 
+                            title: { display: true, text: 'Porcentaje Acumulado (%)' }, 
+                            grid: { drawOnChartArea: false },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(2) + '%';
+                                }
+                            }
+                        }
                     },
-                    plugins: { tooltip: { mode: 'index', intersect: false } }
+                    plugins: { 
+                        tooltip: { 
+                            mode: 'index', 
+                            intersect: false,
+                            callbacks: customTooltipCallback || { // Usar callback personalizado o el por defecto
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.dataset.yAxisID === 'y1') {
+                                        label += context.parsed.y.toFixed(2) + '%';
+                                    } else {
+                                        label += context.parsed.y.toLocaleString('es-BO');
+                                    }
+                                    return label;
+                                }
+                            }
+                        } 
+                    }
                 }
             });
         };
@@ -205,8 +243,33 @@
             createKpiTable('table-container-kg', 'kg');
             createKpiTable('table-container-maple', 'maple');
             
+            // Callback de tooltip personalizado para el gráfico de Transporte
+            const transporteTooltipCallback = {
+                label: function(context) {
+                    // Lógica estándar para la línea de porcentaje
+                    if (context.dataset.yAxisID === 'y1') {
+                        return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}%`;
+                    }
+                    
+                    // Lógica para las barras
+                    const label = context.dataset.label || '';
+                    let fullLabel = `${label}: ${context.parsed.y.toLocaleString('es-BO')}`;
+                    
+                    // Añadir detalle solo para la cuenta 'Sueldos Y Jornales'
+                    if (context.label === 'Sueldos Y Jornales') {
+                        return [
+                            fullLabel,
+                            '  - 1 Empleado Huevo SCZ',
+                            '  - 2 Empleados Huevo LPZ'
+                        ];
+                    }
+                    
+                    return fullLabel;
+                }
+            };
+
             // Renderizar gráficos Pareto
-            createParetoChart('paretoChartTransporte', datosCuentasTransporte);
+            createParetoChart('paretoChartTransporte', datosCuentasTransporte, true, transporteTooltipCallback);
             createParetoChart('paretoChartAlmacenamiento', datosCuentasAlmacenamiento);
 
             // Configurar el botón de plegar/desplegar todo
