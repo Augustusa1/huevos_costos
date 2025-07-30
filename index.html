@@ -13,6 +13,10 @@
             font-family: 'Inter', sans-serif;
             background-color: #fef2f2; /* Un fondo rojo muy tenue */
         }
+        /* Estilos para la tabla */
+        .kpi-table {
+            min-width: 1000px; /* Asegura que la tabla tenga un ancho mínimo para el scroll */
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -30,22 +34,26 @@
             </button>
         </div>
 
-        <!-- Contenedor de las dos columnas de KPIs -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Contenedor principal para las tablas -->
+        <div class="space-y-12">
 
             <!-- Sección para Bs/Kg -->
-            <section class="bg-white p-6 rounded-xl shadow-lg border border-red-200">
+            <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-red-200">
                 <h2 class="text-2xl font-bold text-red-700 mb-6 text-center">Costos por Kilogramo (Bs/Kg)</h2>
-                <div id="kpi-container-kg" class="space-y-4">
-                    <!-- Los KPIs se insertarán aquí con JavaScript -->
+                <div class="overflow-x-auto">
+                    <div id="table-container-kg">
+                        <!-- La tabla para Kg se insertará aquí -->
+                    </div>
                 </div>
             </section>
 
             <!-- Sección para Bs/Maple -->
-            <section class="bg-white p-6 rounded-xl shadow-lg border border-red-200">
+            <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-red-200">
                 <h2 class="text-2xl font-bold text-red-700 mb-6 text-center">Costos por Maple (Bs/Maple)</h2>
-                <div id="kpi-container-maple" class="space-y-4">
-                    <!-- Los KPIs se insertarán aquí con JavaScript -->
+                <div class="overflow-x-auto">
+                    <div id="table-container-maple">
+                        <!-- La tabla para Maple se insertará aquí -->
+                    </div>
                 </div>
             </section>
 
@@ -69,55 +77,59 @@
             { mes: 'jun. 2025', transp_kg: 0.42, alm_kg: 0.38, transp_maple: 0.76, alm_maple: 0.68 },
         ];
 
-        // --- 2. Función para generar los visualizadores de KPI ---
-        const createKpiVisualizers = (containerId, unit) => {
+        // --- 2. Función para generar las tablas de KPI ---
+        const createKpiTable = (containerId, unit) => {
             const container = document.getElementById(containerId);
             if (!container) return;
 
-            datosLogistica.forEach(dato => {
-                const transpKey = `transp_${unit}`;
-                const almKey = `alm_${unit}`;
-                const unitLabel = unit === 'kg' ? 'Bs/Kg' : 'Bs/Maple';
+            const transpKey = `transp_${unit}`;
+            const almKey = `alm_${unit}`;
 
-                const costoTransporte = dato[transpKey];
-                const costoAlmacenamiento = dato[almKey];
-                const costoTotal = parseFloat((costoTransporte + costoAlmacenamiento).toFixed(2));
+            // Generar encabezados de meses
+            const monthsHeader = datosLogistica.map(d => `<th class="p-3 text-sm font-semibold tracking-wide text-left">${d.mes}</th>`).join('');
 
-                const kpiElement = document.createElement('div');
-                // Se cambió la estructura para que no sea un acordeón individual
-                kpiElement.className = 'border border-red-200 rounded-lg overflow-hidden bg-red-50';
-                kpiElement.innerHTML = `
-                    <div class="p-4 flex justify-between items-center">
-                        <div>
-                            <span class="font-semibold text-red-900">${dato.mes}</span>
-                        </div>
-                        <div class="text-right">
-                             <span class="font-bold text-lg text-red-800">${costoTotal.toFixed(2)} ${unitLabel}</span>
-                             <span class="text-sm text-red-600 block">Costo Total</span>
-                        </div>
-                    </div>
-                    <div class="kpi-details bg-white p-4 border-t border-red-100">
-                        <dl>
-                            <div class="flex justify-between py-1">
-                                <dt class="text-gray-600">Costo Transporte:</dt>
-                                <dd class="font-medium text-gray-900">${costoTransporte.toFixed(2)} ${unitLabel}</dd>
-                            </div>
-                            <div class="flex justify-between py-1">
-                                <dt class="text-gray-600">Costo Almacenamiento:</dt>
-                                <dd class="font-medium text-gray-900">${costoAlmacenamiento.toFixed(2)} ${unitLabel}</dd>
-                            </div>
-                        </dl>
-                    </div>
-                `;
-                container.appendChild(kpiElement);
-            });
+            // Generar celdas de datos para cada fila
+            const transportCosts = datosLogistica.map(d => `<td class="p-3 text-sm text-gray-700 whitespace-nowrap">${d[transpKey].toFixed(2)}</td>`).join('');
+            const storageCosts = datosLogistica.map(d => `<td class="p-3 text-sm text-gray-700 whitespace-nowrap">${d[almKey].toFixed(2)}</td>`).join('');
+            const totalCosts = datosLogistica.map(d => {
+                const total = d[transpKey] + d[almKey];
+                return `<td class="p-3 text-sm font-bold text-gray-900 whitespace-nowrap">${total.toFixed(2)}</td>`;
+            }).join('');
+
+            // Ensamblar la tabla completa
+            const tableHTML = `
+                <table class="w-full kpi-table">
+                    <thead class="bg-red-100">
+                        <tr>
+                            <th class="p-3 text-sm font-semibold tracking-wide text-left sticky left-0 bg-red-100 z-10">Concepto</th>
+                            ${monthsHeader}
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-red-100">
+                        <tr class="kpi-details-row bg-white">
+                            <td class="p-3 text-sm text-gray-700 font-medium sticky left-0 bg-white z-10">Costo Transporte</td>
+                            ${transportCosts}
+                        </tr>
+                        <tr class="kpi-details-row bg-white">
+                            <td class="p-3 text-sm text-gray-700 font-medium sticky left-0 bg-white z-10">Costo Almacenamiento</td>
+                            ${storageCosts}
+                        </tr>
+                        <tr class="bg-red-50">
+                            <td class="p-3 text-sm text-red-800 font-bold sticky left-0 bg-red-50 z-10">Costo Logístico Total</td>
+                            ${totalCosts}
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+
+            container.innerHTML = tableHTML;
         };
 
         // --- 3. Renderizar los KPIs y configurar el botón global ---
         window.onload = () => {
-            // Renderizar ambos contenedores de KPIs
-            createKpiVisualizers('kpi-container-kg', 'kg');
-            createKpiVisualizers('kpi-container-maple', 'maple');
+            // Renderizar ambas tablas
+            createKpiTable('table-container-kg', 'kg');
+            createKpiTable('table-container-maple', 'maple');
 
             // Configurar el botón de plegar/desplegar todo
             const toggleBtn = document.getElementById('toggle-all-button');
@@ -125,13 +137,13 @@
 
             toggleBtn.addEventListener('click', () => {
                 areDetailsVisible = !areDetailsVisible; // Invertir el estado
-                const allDetails = document.querySelectorAll('.kpi-details');
+                const allDetailRows = document.querySelectorAll('.kpi-details-row');
                 
-                allDetails.forEach(detail => {
+                allDetailRows.forEach(row => {
                     if (areDetailsVisible) {
-                        detail.classList.remove('hidden');
+                        row.classList.remove('hidden');
                     } else {
-                        detail.classList.add('hidden');
+                        row.classList.add('hidden');
                     }
                 });
 
