@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Análisis de Costos Logísticos - Huevos (KPIs)</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
@@ -16,6 +17,13 @@
         /* Estilos para la tabla */
         .kpi-table {
             min-width: 1000px; /* Asegura que la tabla tenga un ancho mínimo para el scroll */
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 70vh;
+            width: 90vw;
+            max-width: 1200px;
         }
     </style>
 </head>
@@ -57,11 +65,19 @@
                 </div>
             </section>
 
+            <!-- Nueva Sección para Gráfico Pareto -->
+            <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-red-200">
+                <h2 class="text-2xl font-bold text-red-700 mb-6 text-center">Análisis Pareto de Cuentas de Transporte Nacional</h2>
+                <div class="chart-container">
+                    <canvas id="paretoChart"></canvas>
+                </div>
+            </section>
+
         </div>
     </div>
 
     <script>
-        // --- 1. Datos Extraídos de la Imagen ---
+        // --- 1. Datos Extraídos de la Imagen (Costos Logísticos) ---
         const datosLogistica = [
             { mes: 'jul. 2024', transp_kg: 0.42, alm_kg: 0.17, transp_maple: 0.74, alm_maple: 0.30 },
             { mes: 'ago. 2024', transp_kg: 0.48, alm_kg: 0.21, transp_maple: 0.86, alm_maple: 0.37 },
@@ -77,7 +93,32 @@
             { mes: 'jun. 2025', transp_kg: 0.42, alm_kg: 0.38, transp_maple: 0.76, alm_maple: 0.68 },
         ];
 
-        // --- 2. Función para generar las tablas de KPI ---
+        // --- 2. Datos para Gráfico Pareto (Cuentas Transporte) ---
+        const datosCuentas = [
+            { cuenta: 'Sueldos Y Jornales', valor: 174751 },
+            { cuenta: 'Sistemas tecnologicos', valor: 25282 },
+            { cuenta: 'Servicios Externos', valor: 18745 },
+            { cuenta: 'Seguros Gral, Fletes De Producto', valor: 2864601 },
+            { cuenta: 'Ropa De Trabajo', valor: 122 },
+            { cuenta: 'Pasajes Y Viaticos', valor: 2942 },
+            { cuenta: 'Materiales Escritorio Y Suministros', valor: 645 },
+            { cuenta: 'Material Y Prod.Limpieza', valor: 947 },
+            { cuenta: 'Mantenimiento Y Repuestos', valor: 105 },
+            { cuenta: 'Horas Extras', valor: 51282 },
+            { cuenta: 'Gastos Medicos Y Capacitacion', valor: 4216 },
+            { cuenta: 'Gastos legales y tributarios', valor: 8490 },
+            { cuenta: 'Gastos Generales', valor: 6658 },
+            { cuenta: 'Gastos De Alimentacion', valor: 21884 },
+            { cuenta: 'Envases', valor: 273 },
+            { cuenta: 'Depreciacion', valor: 440 },
+            { cuenta: 'Costo de Servicios Internos', valor: 81313 },
+            { cuenta: 'Costo Almacenaje Mat. Y Sum.', valor: 1421 },
+            { cuenta: 'Cconectividad y comunicaciones', valor: 2071 },
+            { cuenta: 'Beneficios Sociales', valor: 153302 },
+            { cuenta: 'Baja De Productos', valor: 3344 },
+        ];
+
+        // --- 3. Función para generar las tablas de KPI ---
         const createKpiTable = (containerId, unit) => {
             const container = document.getElementById(containerId);
             if (!container) return;
@@ -85,10 +126,7 @@
             const transpKey = `transp_${unit}`;
             const almKey = `alm_${unit}`;
 
-            // Generar encabezados de meses
             const monthsHeader = datosLogistica.map(d => `<th class="p-3 text-sm font-semibold tracking-wide text-left">${d.mes}</th>`).join('');
-
-            // Generar celdas de datos para cada fila
             const transportCosts = datosLogistica.map(d => `<td class="p-3 text-sm text-gray-700 whitespace-nowrap">${d[transpKey].toFixed(2)}</td>`).join('');
             const storageCosts = datosLogistica.map(d => `<td class="p-3 text-sm text-gray-700 whitespace-nowrap">${d[almKey].toFixed(2)}</td>`).join('');
             const totalCosts = datosLogistica.map(d => {
@@ -96,7 +134,6 @@
                 return `<td class="p-3 text-sm font-bold text-gray-900 whitespace-nowrap">${total.toFixed(2)}</td>`;
             }).join('');
 
-            // Ensamblar la tabla completa
             const tableHTML = `
                 <table class="w-full kpi-table">
                     <thead class="bg-red-100">
@@ -121,15 +158,102 @@
                     </tbody>
                 </table>
             `;
-
             container.innerHTML = tableHTML;
         };
+        
+        // --- 4. Función para crear el Gráfico Pareto ---
+        const createParetoChart = () => {
+            // Ordenar datos de mayor a menor
+            const sortedData = datosCuentas.sort((a, b) => b.valor - a.valor);
+            
+            const labels = sortedData.map(d => d.cuenta);
+            const values = sortedData.map(d => d.valor);
+            
+            // Calcular total y porcentaje acumulado
+            const total = values.reduce((sum, value) => sum + value, 0);
+            let cumulative = 0;
+            const cumulativePercentage = values.map(value => {
+                cumulative += value;
+                return (cumulative / total) * 100;
+            });
 
-        // --- 3. Renderizar los KPIs y configurar el botón global ---
+            const ctx = document.getElementById('paretoChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Costo por Cuenta',
+                            data: values,
+                            backgroundColor: 'rgba(239, 68, 68, 0.6)', // Rojo
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                            borderWidth: 1,
+                            yAxisID: 'y',
+                        },
+                        {
+                            label: 'Porcentaje Acumulado',
+                            data: cumulativePercentage,
+                            type: 'line',
+                            backgroundColor: 'rgba(153, 27, 27, 0.8)',
+                            borderColor: 'rgba(153, 27, 27, 1)',
+                            yAxisID: 'y1',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 90,
+                                minRotation: 45
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Costo Total (Bs)'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            min: 0,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Porcentaje Acumulado (%)'
+                            },
+                            grid: {
+                                drawOnChartArea: false, // only-draw-grid-lines-for-one-axis
+                            },
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                    }
+                }
+            });
+        };
+
+        // --- 5. Renderizar todo al cargar la página ---
         window.onload = () => {
             // Renderizar ambas tablas
             createKpiTable('table-container-kg', 'kg');
             createKpiTable('table-container-maple', 'maple');
+            
+            // Renderizar el gráfico Pareto
+            createParetoChart();
 
             // Configurar el botón de plegar/desplegar todo
             const toggleBtn = document.getElementById('toggle-all-button');
