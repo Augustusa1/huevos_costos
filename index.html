@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análisis de Costos Logísticos - Huevos (KPIs)</title>
+    <title>Dashboard de Costos Logísticos - Huevos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,11 +12,10 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #fef2f2; /* Un fondo rojo muy tenue */
+            background-color: #f9fafb;
         }
-        /* Estilos para la tabla */
         .kpi-table {
-            min-width: 1000px; /* Asegura que la tabla tenga un ancho mínimo para el scroll */
+            min-width: 1000px;
         }
         .chart-container {
             position: relative;
@@ -25,133 +24,200 @@
             width: 90vw;
             max-width: 1200px;
         }
+        .tab-button {
+            transition: all 0.3s ease-in-out;
+        }
+        .tab-button.active {
+            border-bottom-width: 4px;
+            font-weight: 700;
+        }
     </style>
 </head>
 <body class="text-gray-800">
 
     <div class="container mx-auto p-4 sm:p-8">
         <header class="text-center mb-6">
-            <h1 class="text-3xl sm:text-4xl font-bold text-red-800">Análisis de Costos Logísticos de Huevos</h1>
-            <p class="text-lg text-red-700 mt-2">Visualización de KPIs de Transporte y Almacenamiento (Jul 2024 - Jun 2025)</p>
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800">Dashboard de Costos Logísticos</h1>
+            <p class="text-lg text-gray-600 mt-2">Análisis de KPIs por Departamento</p>
         </header>
 
+        <!-- Pestañas de Navegación -->
+        <div class="border-b border-gray-200 mb-8">
+            <nav class="-mb-px flex justify-center space-x-4 sm:space-x-8" aria-label="Tabs">
+                <button id="tab-nacional" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg border-red-500 text-red-600 active" data-view="nacional-view">
+                    Nacional
+                </button>
+                <button id="tab-scz" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg border-transparent text-gray-500 hover:text-green-600 hover:border-green-300" data-view="scz-view">
+                    Santa Cruz
+                </button>
+                <button id="tab-lpz" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg border-transparent text-gray-500 hover:text-rose-600 hover:border-rose-300" data-view="lpz-view">
+                    La Paz
+                </button>
+            </nav>
+        </div>
+        
         <!-- Botón global para plegar/desplegar -->
         <div class="text-center mb-8">
-            <button id="toggle-all-button" class="bg-red-700 text-white font-bold py-2 px-5 rounded-lg hover:bg-red-800 transition-colors shadow-md">
+            <button id="toggle-all-button" class="bg-gray-700 text-white font-bold py-2 px-5 rounded-lg hover:bg-gray-800 transition-colors shadow-md">
                 Ocultar Detalles
             </button>
         </div>
 
-        <!-- Contenedor principal para las tablas y gráficos -->
-        <div class="space-y-12">
-
-            <!-- Sección para Bs/Kg -->
+        <!-- Vista Nacional -->
+        <div id="nacional-view" class="view-container space-y-12">
             <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-red-200">
                 <h2 class="text-2xl font-bold text-red-700 mb-6 text-center">Costos por Kilogramo (Bs/Kg)</h2>
                 <div class="overflow-x-auto">
-                    <div id="table-container-kg">
-                        <!-- La tabla para Kg se insertará aquí -->
-                    </div>
+                    <div id="table-container-kg-nacional"></div>
                 </div>
             </section>
-
-            <!-- Sección para Bs/Maple -->
             <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-red-200">
                 <h2 class="text-2xl font-bold text-red-700 mb-6 text-center">Costos por Maple (Bs/Maple)</h2>
                 <div class="overflow-x-auto">
-                    <div id="table-container-maple">
-                        <!-- La tabla para Maple se insertará aquí -->
-                    </div>
+                    <div id="table-container-maple-nacional"></div>
                 </div>
             </section>
-
-            <!-- Sección para Gráfico Pareto Transporte -->
             <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-red-200">
                 <h2 class="text-2xl font-bold text-red-700 mb-6 text-center">Análisis Pareto de Cuentas de Transporte Nacional</h2>
                 <div class="chart-container">
                     <canvas id="paretoChartTransporte"></canvas>
                 </div>
             </section>
-
-            <!-- Sección para Gráfico Pareto Almacenamiento -->
             <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-red-200">
                 <h2 class="text-2xl font-bold text-red-700 mb-6 text-center">Análisis Pareto de Cuentas de Almacenamiento Nacional</h2>
                 <div class="chart-container">
                     <canvas id="paretoChartAlmacenamiento"></canvas>
                 </div>
             </section>
-
         </div>
+
+        <!-- Vista Santa Cruz -->
+        <div id="scz-view" class="view-container space-y-12 hidden">
+            <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-green-200">
+                <h2 class="text-2xl font-bold text-green-700 mb-6 text-center">Costos por Kilogramo (Bs/Kg) - SCZ</h2>
+                <div class="overflow-x-auto">
+                    <div id="table-container-kg-scz"></div>
+                </div>
+            </section>
+            <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-green-200">
+                <h2 class="text-2xl font-bold text-green-700 mb-6 text-center">Costos por Maple (Bs/Maple) - SCZ</h2>
+                <div class="overflow-x-auto">
+                    <div id="table-container-maple-scz"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Vista La Paz -->
+        <div id="lpz-view" class="view-container space-y-12 hidden">
+            <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-rose-200">
+                <h2 class="text-2xl font-bold text-rose-700 mb-6 text-center">Costos por Kilogramo (Bs/Kg) - LPZ</h2>
+                <div class="overflow-x-auto">
+                    <div id="table-container-kg-lpz"></div>
+                </div>
+            </section>
+            <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-rose-200">
+                <h2 class="text-2xl font-bold text-rose-700 mb-6 text-center">Costos por Maple (Bs/Maple) - LPZ</h2>
+                <div class="overflow-x-auto">
+                    <div id="table-container-maple-lpz"></div>
+                </div>
+            </section>
+        </div>
+
     </div>
 
     <script>
-        // --- 1. Datos Extraídos de la Imagen (Costos Logísticos) ---
-        const datosLogistica = [
-            { mes: 'jul. 2024', transp_kg: 0.42, alm_kg: 0.17, transp_maple: 0.74, alm_maple: 0.30 },
-            { mes: 'ago. 2024', transp_kg: 0.48, alm_kg: 0.21, transp_maple: 0.86, alm_maple: 0.37 },
-            { mes: 'sep. 2024', transp_kg: 0.45, alm_kg: 0.22, transp_maple: 0.81, alm_maple: 0.40 },
-            { mes: 'oct. 2024', transp_kg: 0.48, alm_kg: 0.20, transp_maple: 0.88, alm_maple: 0.37 },
-            { mes: 'nov. 2024', transp_kg: 0.31, alm_kg: 0.15, transp_maple: 0.57, alm_maple: 0.27 },
-            { mes: 'dic. 2024', transp_kg: 0.46, alm_kg: 0.27, transp_maple: 0.84, alm_maple: 0.49 },
-            { mes: 'ene. 2025', transp_kg: 0.43, alm_kg: 0.19, transp_maple: 0.77, alm_maple: 0.35 },
-            { mes: 'feb. 2025', transp_kg: 0.43, alm_kg: 0.20, transp_maple: 0.80, alm_maple: 0.36 },
-            { mes: 'mar. 2025', transp_kg: 0.38, alm_kg: 0.26, transp_maple: 0.70, alm_maple: 0.48 },
-            { mes: 'abr. 2025', transp_kg: 0.38, alm_kg: 0.22, transp_maple: 0.70, alm_maple: 0.40 },
-            { mes: 'may. 2025', transp_kg: 0.36, alm_kg: 0.24, transp_maple: 0.64, alm_maple: 0.44 },
-            { mes: 'jun. 2025', transp_kg: 0.42, alm_kg: 0.38, transp_maple: 0.76, alm_maple: 0.68 },
-        ];
+        // --- 1. DATOS ---
+        const datosNacional = {
+            logistica: [
+                { mes: 'jul. 2024', transp_kg: 0.42, alm_kg: 0.17, transp_maple: 0.74, alm_maple: 0.30 }, { mes: 'ago. 2024', transp_kg: 0.48, alm_kg: 0.21, transp_maple: 0.86, alm_maple: 0.37 }, { mes: 'sep. 2024', transp_kg: 0.45, alm_kg: 0.22, transp_maple: 0.81, alm_maple: 0.40 }, { mes: 'oct. 2024', transp_kg: 0.48, alm_kg: 0.20, transp_maple: 0.88, alm_maple: 0.37 }, { mes: 'nov. 2024', transp_kg: 0.31, alm_kg: 0.15, transp_maple: 0.57, alm_maple: 0.27 }, { mes: 'dic. 2024', transp_kg: 0.46, alm_kg: 0.27, transp_maple: 0.84, alm_maple: 0.49 }, { mes: 'ene. 2025', transp_kg: 0.43, alm_kg: 0.19, transp_maple: 0.77, alm_maple: 0.35 }, { mes: 'feb. 2025', transp_kg: 0.43, alm_kg: 0.20, transp_maple: 0.80, alm_maple: 0.36 }, { mes: 'mar. 2025', transp_kg: 0.38, alm_kg: 0.26, transp_maple: 0.70, alm_maple: 0.48 }, { mes: 'abr. 2025', transp_kg: 0.38, alm_kg: 0.22, transp_maple: 0.70, alm_maple: 0.40 }, { mes: 'may. 2025', transp_kg: 0.36, alm_kg: 0.24, transp_maple: 0.64, alm_maple: 0.44 }, { mes: 'jun. 2025', transp_kg: 0.42, alm_kg: 0.38, transp_maple: 0.76, alm_maple: 0.68 },
+            ],
+            cuentasTransporte: [
+                { cuenta: 'Sueldos Y Jornales', valor: 10832 }, { cuenta: 'Sistemas tecnologicos', valor: 1993 }, { cuenta: 'Servicios Externos', valor: 1063 }, { cuenta: 'Seguros Gral, Fletes De Producto', valor: 163462 }, { cuenta: 'Ropa De Trabajo', valor: 24 }, { cuenta: 'Pasajes Y Viaticos', valor: 294 }, { cuenta: 'Materiales Escritorio Y Suministros', valor: 45 }, { cuenta: 'Material Y Prod.Limpieza', valor: 119 }, { cuenta: 'Mantenimiento Y Repuestos', valor: 52 }, { cuenta: 'Horas Extras', valor: 2867 }, { cuenta: 'Gastos Medicos Y Capacitacion', valor: 277 }, { cuenta: 'Gastos legales y tributarios', valor: 351 }, { cuenta: 'Gastos Generales', valor: 413 }, { cuenta: 'Gastos De Alimentacion', valor: 1189 }, { cuenta: 'Envases', valor: 0 }, { cuenta: 'Depreciacion', valor: 33 }, { cuenta: 'Costo de Servicios Internos', valor: 4365 }, { cuenta: 'Costo Almacenaje Mat. Y Sum.', valor: 52 }, { cuenta: 'Cconectividad y comunicaciones', valor: 152 }, { cuenta: 'Beneficios Sociales', valor: 9067 }, { cuenta: 'Baja De Productos', valor: 329 },
+            ],
+            cuentasAlmacenamiento: [
+                { cuenta: 'Sueldos Y Jornales', valor: 26015 }, { cuenta: 'Sistemas tecnologicos', valor: 1421 }, { cuenta: 'Servicios Externos', valor: 25449 }, { cuenta: 'Ropa De Trabajo', valor: 500 }, { cuenta: 'Pasajes Y Viaticos', valor: 61 }, { cuenta: 'Materiales Escritorio Y Suministros', valor: 2204 }, { cuenta: 'Material Y Prod.Limpieza', valor: 431 }, { cuenta: 'Mantenimiento Y Repuestos', valor: 5344 }, { cuenta: 'Horas Extras', valor: 4680 }, { cuenta: 'Gastos Medicos Y Capacitacion', valor: 527 }, { cuenta: 'Gastos legales y tributarios', valor: 496 }, { cuenta: 'Gastos Generales', valor: 1240 }, { cuenta: 'Gastos De Alimentacion', valor: 2048 }, { cuenta: 'Envases', valor: 0 }, { cuenta: 'Energia Electrica Y Agua', valor: 3763 }, { cuenta: 'Depreciacion', valor: 10619 }, { cuenta: 'Costo de Servicios Internos', valor: 2551 }, { cuenta: 'Costo Almacenaje Mat. Y Sum.', valor: 331 }, { cuenta: 'Cconectividad y comunicaciones', valor: 427 }, { cuenta: 'Beneficios Sociales', valor: 25109 }, { cuenta: 'Baja De Productos', valor: 2753 },
+            ]
+        };
 
-        // --- 2. Datos para Gráficos Pareto ---
-        const datosCuentasTransporte = [
-            { cuenta: 'Sueldos Y Jornales', valor: 10832 }, { cuenta: 'Sistemas tecnologicos', valor: 1993 }, { cuenta: 'Servicios Externos', valor: 1063 }, { cuenta: 'Seguros Gral, Fletes De Producto', valor: 163462 }, { cuenta: 'Ropa De Trabajo', valor: 24 }, { cuenta: 'Pasajes Y Viaticos', valor: 294 }, { cuenta: 'Materiales Escritorio Y Suministros', valor: 45 }, { cuenta: 'Material Y Prod.Limpieza', valor: 119 }, { cuenta: 'Mantenimiento Y Repuestos', valor: 52 }, { cuenta: 'Horas Extras', valor: 2867 }, { cuenta: 'Gastos Medicos Y Capacitacion', valor: 277 }, { cuenta: 'Gastos legales y tributarios', valor: 351 }, { cuenta: 'Gastos Generales', valor: 413 }, { cuenta: 'Gastos De Alimentacion', valor: 1189 }, { cuenta: 'Envases', valor: 0 }, { cuenta: 'Depreciacion', valor: 33 }, { cuenta: 'Costo de Servicios Internos', valor: 4365 }, { cuenta: 'Costo Almacenaje Mat. Y Sum.', valor: 52 }, { cuenta: 'Cconectividad y comunicaciones', valor: 152 }, { cuenta: 'Beneficios Sociales', valor: 9067 }, { cuenta: 'Baja De Productos', valor: 329 },
-        ];
+        const datosSCZ = {
+            logistica: [
+                { mes: 'jul. 2024', transp_kg: 0.36, alm_kg: 0.12, transp_maple: 0.64, alm_maple: 0.20 }, { mes: 'ago. 2024', transp_kg: 0.37, alm_kg: 0.21, transp_maple: 0.66, alm_maple: 0.37 }, { mes: 'sep. 2024', transp_kg: 0.35, alm_kg: 0.19, transp_maple: 0.64, alm_maple: 0.34 }, { mes: 'oct. 2024', transp_kg: 0.41, alm_kg: 0.17, transp_maple: 0.74, alm_maple: 0.31 }, { mes: 'nov. 2024', transp_kg: 0.22, alm_kg: 0.12, transp_maple: 0.40, alm_maple: 0.21 }, { mes: 'dic. 2024', transp_kg: 0.35, alm_kg: 0.20, transp_maple: 0.64, alm_maple: 0.35 }, { mes: 'ene. 2025', transp_kg: 0.32, alm_kg: 0.19, transp_maple: 0.59, alm_maple: 0.34 }, { mes: 'feb. 2025', transp_kg: 0.33, alm_kg: 0.15, transp_maple: 0.61, alm_maple: 0.28 }, { mes: 'mar. 2025', transp_kg: 0.27, alm_kg: 0.20, transp_maple: 0.49, alm_maple: 0.36 }, { mes: 'abr. 2025', transp_kg: 0.31, alm_kg: 0.16, transp_maple: 0.56, alm_maple: 0.30 }, { mes: 'may. 2025', transp_kg: 0.27, alm_kg: 0.19, transp_maple: 0.47, alm_maple: 0.33 }, { mes: 'jun. 2025', transp_kg: 0.31, alm_kg: 0.21, transp_maple: 0.56, alm_maple: 0.38 },
+            ]
+        };
         
-        const datosCuentasAlmacenamiento = [
-            { cuenta: 'Sueldos Y Jornales', valor: 26015 }, { cuenta: 'Sistemas tecnologicos', valor: 1421 }, { cuenta: 'Servicios Externos', valor: 25449 }, { cuenta: 'Ropa De Trabajo', valor: 500 }, { cuenta: 'Pasajes Y Viaticos', valor: 61 }, { cuenta: 'Materiales Escritorio Y Suministros', valor: 2204 }, { cuenta: 'Material Y Prod.Limpieza', valor: 431 }, { cuenta: 'Mantenimiento Y Repuestos', valor: 5344 }, { cuenta: 'Horas Extras', valor: 4680 }, { cuenta: 'Gastos Medicos Y Capacitacion', valor: 527 }, { cuenta: 'Gastos legales y tributarios', valor: 496 }, { cuenta: 'Gastos Generales', valor: 1240 }, { cuenta: 'Gastos De Alimentacion', valor: 2048 }, { cuenta: 'Envases', valor: 0 }, { cuenta: 'Energia Electrica Y Agua', valor: 3763 }, { cuenta: 'Depreciacion', valor: 10619 }, { cuenta: 'Costo de Servicios Internos', valor: 2551 }, { cuenta: 'Costo Almacenaje Mat. Y Sum.', valor: 331 }, { cuenta: 'Cconectividad y comunicaciones', valor: 427 }, { cuenta: 'Beneficios Sociales', valor: 25109 }, { cuenta: 'Baja De Productos', valor: 2753 },
-        ];
+        const datosLPZ = {
+            logistica: [
+                { mes: 'jul. 2024', transp_kg: 0.43, alm_kg: 0.18, transp_maple: 0.77, alm_maple: 0.32 }, { mes: 'ago. 2024', transp_kg: 0.53, alm_kg: 0.17, transp_maple: 0.95, alm_maple: 0.31 }, { mes: 'sep. 2024', transp_kg: 0.51, alm_kg: 0.20, transp_maple: 0.93, alm_maple: 0.37 }, { mes: 'oct. 2024', transp_kg: 0.51, alm_kg: 0.17, transp_maple: 0.93, alm_maple: 0.32 }, { mes: 'nov. 2024', transp_kg: 0.44, alm_kg: 0.14, transp_maple: 0.80, alm_maple: 0.26 }, { mes: 'dic. 2024', transp_kg: 0.55, alm_kg: 0.26, transp_maple: 1.03, alm_maple: 0.48 }, { mes: 'ene. 2025', transp_kg: 0.47, alm_kg: 0.14, transp_maple: 0.86, alm_maple: 0.27 }, { mes: 'feb. 2025', transp_kg: 0.49, alm_kg: 0.15, transp_maple: 0.93, alm_maple: 0.28 }, { mes: 'mar. 2025', transp_kg: 0.55, alm_kg: 0.25, transp_maple: 1.04, alm_maple: 0.48 }, { mes: 'abr. 2025', transp_kg: 0.49, alm_kg: 0.19, transp_maple: 0.92, alm_maple: 0.35 }, { mes: 'may. 2025', transp_kg: 0.46, alm_kg: 0.18, transp_maple: 0.85, alm_maple: 0.33 }, { mes: 'jun. 2025', transp_kg: 0.82, alm_kg: 0.84, transp_maple: 1.52, alm_maple: 1.56 },
+            ]
+        };
 
-        // --- 3. Función para generar las tablas de KPI ---
-        const createKpiTable = (containerId, unit) => {
+        // --- 2. TEMAS DE COLOR ---
+        const themes = {
+            nacional: { text: 'text-red-800', head: 'bg-red-100', total: 'bg-red-50', border: 'border-red-200', chart: { bar: 'rgba(239, 68, 68, 0.6)', line: 'rgba(153, 27, 27, 0.8)' } },
+            scz: { text: 'text-green-800', head: 'bg-green-100', total: 'bg-green-50', border: 'border-green-200', chart: { bar: 'rgba(5, 150, 105, 0.6)', line: 'rgba(4, 120, 87, 0.8)' } },
+            lpz: { text: 'text-rose-800', head: 'bg-rose-100', total: 'bg-rose-50', border: 'border-rose-200', chart: { bar: 'rgba(225, 29, 72, 0.6)', line: 'rgba(190, 18, 60, 0.8)' } }
+        };
+
+        // --- 3. FUNCIONES DE RENDERIZADO ---
+        const createKpiTable = (containerId, data, unit, theme) => {
             const container = document.getElementById(containerId);
             if (!container) return;
+            
             const transpKey = `transp_${unit}`;
             const almKey = `alm_${unit}`;
-            const monthsHeader = datosLogistica.map(d => `<th class="p-3 text-sm font-semibold tracking-wide text-left">${d.mes}</th>`).join('');
-            const transportCosts = datosLogistica.map(d => `<td class="p-3 text-sm text-gray-700 whitespace-nowrap">${d[transpKey].toFixed(2)}</td>`).join('');
-            const storageCosts = datosLogistica.map(d => `<td class="p-3 text-sm text-gray-700 whitespace-nowrap">${d[almKey].toFixed(2)}</td>`).join('');
-            const totalCosts = datosLogistica.map(d => {
-                const total = d[transpKey] + d[almKey];
-                return `<td class="p-3 text-sm font-bold text-gray-900 whitespace-nowrap">${total.toFixed(2)}</td>`;
-            }).join('');
+            
+            const calculateAverage = (arr) => {
+                if (!arr || arr.length === 0) return '0.00';
+                const sum = arr.reduce((acc, val) => acc + val, 0);
+                return (sum / arr.length).toFixed(2);
+            };
+
+            const transportValues = data.map(d => d[transpKey]);
+            const storageValues = data.map(d => d[almKey]);
+            const totalValues = data.map(d => d[transpKey] + d[almKey]);
+
+            const avgTransport = calculateAverage(transportValues);
+            const avgStorage = calculateAverage(storageValues);
+            const avgTotal = calculateAverage(totalValues);
+
+            const monthsHeader = data.map(d => `<th class="p-3 text-sm font-semibold tracking-wide text-left">${d.mes}</th>`).join('');
+            const transportCosts = transportValues.map(val => `<td class="p-3 text-sm text-gray-700 whitespace-nowrap">${val.toFixed(2)}</td>`).join('');
+            const storageCosts = storageValues.map(val => `<td class="p-3 text-sm text-gray-700 whitespace-nowrap">${val.toFixed(2)}</td>`).join('');
+            const totalCosts = totalValues.map(val => `<td class="p-3 text-sm font-bold text-gray-900 whitespace-nowrap">${val.toFixed(2)}</td>`).join('');
+            
             const tableHTML = `
                 <table class="w-full kpi-table">
-                    <thead class="bg-red-100">
+                    <thead class="${theme.head}">
                         <tr>
-                            <th class="p-3 text-sm font-semibold tracking-wide text-left sticky left-0 bg-red-100 z-10">Concepto</th>
+                            <th class="p-3 text-sm font-semibold tracking-wide text-left sticky left-0 ${theme.head} z-10">Concepto</th>
                             ${monthsHeader}
+                            <th class="p-3 text-sm font-semibold tracking-wide text-left sticky right-0 ${theme.head} z-10 border-l ${theme.border}">Promedio</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-red-100">
+                    <tbody class="divide-y ${theme.border.replace('border-', 'divide-')}">
                         <tr class="kpi-details-row bg-white">
                             <td class="p-3 text-sm text-gray-700 font-medium sticky left-0 bg-white z-10">Costo Transporte</td>
                             ${transportCosts}
+                            <td class="p-3 text-sm text-gray-800 font-bold whitespace-nowrap sticky right-0 bg-white z-10 border-l ${theme.border}">${avgTransport}</td>
                         </tr>
                         <tr class="kpi-details-row bg-white">
                             <td class="p-3 text-sm text-gray-700 font-medium sticky left-0 bg-white z-10">Costo Almacenamiento</td>
                             ${storageCosts}
+                            <td class="p-3 text-sm text-gray-800 font-bold whitespace-nowrap sticky right-0 bg-white z-10 border-l ${theme.border}">${avgStorage}</td>
                         </tr>
-                        <tr class="bg-red-50">
-                            <td class="p-3 text-sm text-red-800 font-bold sticky left-0 bg-red-50 z-10">Costo Logístico Total</td>
+                        <tr class="${theme.total}">
+                            <td class="p-3 text-sm ${theme.text} font-bold sticky left-0 ${theme.total} z-10">Costo Logístico Total</td>
                             ${totalCosts}
+                            <td class="p-3 text-sm ${theme.text} font-bold whitespace-nowrap sticky right-0 ${theme.total} z-10 border-l ${theme.border}">${avgTotal}</td>
                         </tr>
                     </tbody>
-                </table>
-            `;
+                </table>`;
             container.innerHTML = tableHTML;
         };
         
-        // --- 4. Función genérica para crear Gráfico Pareto con opciones ---
-        const createParetoChart = (canvasId, data, useLogScale = false, customTooltipCallback = null) => {
+        const createParetoChart = (canvasId, data, theme, useLogScale = false, customTooltipCallback = null) => {
+            const container = document.getElementById(canvasId);
+            if (!container) return;
             const sortedData = data.sort((a, b) => b.valor - a.valor);
             const labels = sortedData.map(d => d.cuenta);
             const values = sortedData.map(d => d.valor);
@@ -162,140 +228,76 @@
                 return total > 0 ? (cumulative / total) * 100 : 0;
             });
 
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            new Chart(ctx, {
+            new Chart(container.getContext('2d'), {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [
-                        {
-                            label: 'Costo por Cuenta',
-                            data: values,
-                            backgroundColor: 'rgba(239, 68, 68, 0.6)',
-                            borderColor: 'rgba(239, 68, 68, 1)',
-                            borderWidth: 1,
-                            yAxisID: 'y',
-                        },
-                        {
-                            label: 'Porcentaje Acumulado',
-                            data: cumulativePercentage,
-                            type: 'line',
-                            backgroundColor: 'rgba(153, 27, 27, 0.8)',
-                            borderColor: 'rgba(153, 27, 27, 1)',
-                            yAxisID: 'y1',
-                        }
+                        { label: 'Costo por Cuenta', data: values, backgroundColor: theme.chart.bar, borderColor: theme.chart.bar.replace('0.6', '1'), borderWidth: 1, yAxisID: 'y' },
+                        { label: 'Porcentaje Acumulado', data: cumulativePercentage, type: 'line', backgroundColor: theme.chart.line, borderColor: theme.chart.line.replace('0.8', '1'), yAxisID: 'y1' }
                     ]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     scales: {
                         x: { ticks: { autoSkip: false, maxRotation: 90, minRotation: 45 } },
-                        y: { 
-                            type: useLogScale ? 'logarithmic' : 'linear',
-                            display: true, 
-                            position: 'left', 
-                            title: { 
-                                display: true, 
-                                text: useLogScale ? 'Costo Total (Bs) - Escala Logarítmica' : 'Costo Total (Bs)' 
-                            } 
-                        },
-                        y1: { 
-                            type: 'linear', 
-                            display: true, 
-                            position: 'right', 
-                            min: 0, 
-                            max: 100, 
-                            title: { display: true, text: 'Porcentaje Acumulado (%)' }, 
-                            grid: { drawOnChartArea: false },
-                            ticks: {
-                                callback: function(value) {
-                                    return value.toFixed(2) + '%';
-                                }
-                            }
-                        }
+                        y: { type: useLogScale ? 'logarithmic' : 'linear', display: true, position: 'left', title: { display: true, text: useLogScale ? 'Costo Total (Bs) - Escala Logarítmica' : 'Costo Total (Bs)' } },
+                        y1: { type: 'linear', display: true, position: 'right', min: 0, max: 100, title: { display: true, text: 'Porcentaje Acumulado (%)' }, grid: { drawOnChartArea: false }, ticks: { callback: value => value.toFixed(2) + '%' } }
                     },
-                    plugins: { 
-                        tooltip: { 
-                            mode: 'index', 
-                            intersect: false,
-                            callbacks: customTooltipCallback || { // Usar callback personalizado o el por defecto
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) { label += ': '; }
-                                    if (context.dataset.yAxisID === 'y1') {
-                                        label += context.parsed.y.toFixed(2) + '%';
-                                    } else {
-                                        label += context.parsed.y.toLocaleString('es-BO');
-                                    }
-                                    return label;
-                                }
-                            }
-                        } 
-                    }
+                    plugins: { tooltip: { mode: 'index', intersect: false, callbacks: customTooltipCallback || { label: (context) => `${context.dataset.label}: ${context.dataset.yAxisID === 'y1' ? context.parsed.y.toFixed(2) + '%' : context.parsed.y.toLocaleString('es-BO')}` } } }
                 }
             });
         };
 
-        // --- 5. Renderizar todo al cargar la página ---
+        // --- 4. LÓGICA DE LA APLICACIÓN ---
         window.onload = () => {
-            // Renderizar tablas
-            createKpiTable('table-container-kg', 'kg');
-            createKpiTable('table-container-maple', 'maple');
+            // Renderizado inicial
+            createKpiTable('table-container-kg-nacional', datosNacional.logistica, 'kg', themes.nacional);
+            createKpiTable('table-container-maple-nacional', datosNacional.logistica, 'maple', themes.nacional);
+            createKpiTable('table-container-kg-scz', datosSCZ.logistica, 'kg', themes.scz);
+            createKpiTable('table-container-maple-scz', datosSCZ.logistica, 'maple', themes.scz);
+            createKpiTable('table-container-kg-lpz', datosLPZ.logistica, 'kg', themes.lpz);
+            createKpiTable('table-container-maple-lpz', datosLPZ.logistica, 'maple', themes.lpz);
             
-            // Callback de tooltip personalizado para el gráfico de Transporte
-            const transporteTooltipCallback = {
-                label: function(context) {
-                    if (context.dataset.yAxisID === 'y1') {
-                        return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}%`;
-                    }
-                    const label = context.dataset.label || '';
-                    let fullLabel = `${label}: ${context.parsed.y.toLocaleString('es-BO')}`;
-                    if (context.label === 'Sueldos Y Jornales') {
-                        return [
-                            fullLabel,
-                            '  - 1 Empleado Huevo SCZ',
-                            '  - 2 Empleados Huevo LPZ'
-                        ];
-                    }
-                    return fullLabel;
-                }
-            };
+            const transporteTooltip = { label: (c) => { if(c.dataset.yAxisID === 'y1') return `${c.dataset.label}: ${c.parsed.y.toFixed(2)}%`; let l = `${c.dataset.label}: ${c.parsed.y.toLocaleString('es-BO')}`; if (c.label === 'Sueldos Y Jornales') return [l, '  - 1 Empleado Huevo SCZ', '  - 2 Empleados Huevo LPZ']; return l; } };
+            const almacenamientoTooltipNacional = { label: (c) => { if(c.dataset.yAxisID === 'y1') return `${c.dataset.label}: ${c.parsed.y.toFixed(2)}%`; let l = `${c.dataset.label}: ${c.parsed.y.toLocaleString('es-BO')}`; if (c.label === 'Sueldos Y Jornales') return [l, '  - 2 EMPLEADOS HUEVO CBBA', '  - 1 EMPLEADO HUEVO LPZ', '  - 3 EMPLEADOS HUEVO SCZ']; return l; } };
+            
+            createParetoChart('paretoChartTransporte', datosNacional.cuentasTransporte, themes.nacional, true, transporteTooltip);
+            createParetoChart('paretoChartAlmacenamiento', datosNacional.cuentasAlmacenamiento, themes.nacional, false, almacenamientoTooltipNacional);
+            
+            // Lógica de pestañas
+            const tabs = document.querySelectorAll('.tab-button');
+            const views = document.querySelectorAll('.view-container');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => {
+                        t.classList.remove('active', 'border-red-500', 'text-red-600', 'border-green-500', 'text-green-600', 'border-rose-500', 'text-rose-600');
+                        t.classList.add('border-transparent', 'text-gray-500');
+                    });
+                    
+                    let themeColor = 'red';
+                    if (tab.id === 'tab-scz') themeColor = 'green';
+                    if (tab.id === 'tab-lpz') themeColor = 'rose';
 
-            // Callback de tooltip personalizado para el gráfico de Almacenamiento
-            const almacenamientoTooltipCallback = {
-                label: function(context) {
-                    if (context.dataset.yAxisID === 'y1') {
-                        return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}%`;
-                    }
-                    const label = context.dataset.label || '';
-                    let fullLabel = `${label}: ${context.parsed.y.toLocaleString('es-BO')}`;
-                    if (context.label === 'Sueldos Y Jornales') {
-                        return [
-                            fullLabel,
-                            '  - 2 EMPLEADOS HUEVO CBBA',
-                            '  - 1 EMPLEADO HUEVO LPZ',
-                            '  - 3 EMPLEADOS HUEVO SCZ'
-                        ];
-                    }
-                    return fullLabel;
-                }
-            };
+                    tab.classList.add('active', `border-${themeColor}-500`, `text-${themeColor}-600`);
+                    tab.classList.remove('border-transparent', 'text-gray-500');
 
-            // Renderizar gráficos Pareto
-            createParetoChart('paretoChartTransporte', datosCuentasTransporte, true, transporteTooltipCallback);
-            createParetoChart('paretoChartAlmacenamiento', datosCuentasAlmacenamiento, false, almacenamientoTooltipCallback);
-
-            // Configurar el botón de plegar/desplegar todo
-            const toggleBtn = document.getElementById('toggle-all-button');
-            let areDetailsVisible = true;
-            toggleBtn.addEventListener('click', () => {
-                areDetailsVisible = !areDetailsVisible;
-                const allDetailRows = document.querySelectorAll('.kpi-details-row');
-                allDetailRows.forEach(row => {
-                    row.classList.toggle('hidden', !areDetailsVisible);
+                    const viewId = tab.dataset.view;
+                    views.forEach(view => {
+                        view.classList.toggle('hidden', view.id !== viewId);
+                    });
                 });
-                toggleBtn.textContent = areDetailsVisible ? 'Ocultar Detalles' : 'Mostrar Detalles';
+            });
+
+            // Lógica del botón de ocultar
+            document.getElementById('toggle-all-button').addEventListener('click', (e) => {
+                const activeView = document.querySelector('.view-container:not(.hidden)');
+                if (activeView) {
+                    const detailRows = activeView.querySelectorAll('.kpi-details-row');
+                    const areHidden = Array.from(detailRows).some(row => row.classList.contains('hidden'));
+                    detailRows.forEach(row => row.classList.toggle('hidden', !areHidden));
+                    e.target.textContent = areHidden ? 'Mostrar Detalles' : 'Mostrar Detalles';
+                }
             });
         };
     </script>
