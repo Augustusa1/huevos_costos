@@ -457,7 +457,13 @@
             createCanalTable('table-container-canal-scz', datosSCZ.canal, themes.scz);
             createCanalTable('table-container-canal-cbba', datosCBBA.canal, themes.cbba);
             
-            const transporteTooltip = { label: (c) => { if(c.dataset.yAxisID === 'y1') return `${c.dataset.label}: ${c.parsed.y.toFixed(2)}%`; let l = `${c.dataset.label}: ${c.parsed.y.toLocaleString('es-BO')}`; if (c.label === 'Sueldos Y Jornales') return [l, '  - 1 Empleado Huevo SCZ', '  - 2 Empleados Huevo LPZ']; return l; } };
+            const transporteTooltip = { label: (c) => { 
+                if(c.dataset.yAxisID === 'y1') return `${c.dataset.label}: ${c.parsed.y.toFixed(2)}%`; 
+                let l = `${c.dataset.label}: ${c.parsed.y.toLocaleString('es-BO')}`; 
+                if (c.label === 'Sueldos Y Jornales') return [l, '  - 1 Empleado Huevo SCZ', '  - 2 Empleados Huevo LPZ'];
+                if (c.label === 'Seguros Gral, Fletes De Producto') return [l, '  - SANTA CRUZ PROMEDIO: 60,480', '  - LA PAZ PROMEDIO: 85,100', '  - COCHABAMBA: 17,716'];
+                return l; 
+            } };
             const almacenamientoTooltipNacional = { label: (c) => { if(c.dataset.yAxisID === 'y1') return `${c.dataset.label}: ${c.parsed.y.toFixed(2)}%`; let l = `${c.dataset.label}: ${c.parsed.y.toLocaleString('es-BO')}`; if (c.label === 'Sueldos Y Jornales') return [l, '  - 2 EMPLEADOS HUEVO CBBA', '  - 1 EMPLEADO HUEVO LPZ', '  - 3 EMPLEADOS HUEVO SCZ']; return l; } };
             
             createParetoChart('paretoChartTransporte', datosNacional.cuentasTransporte, themes.nacional, true, transporteTooltip);
@@ -502,4 +508,3 @@
     </script>
 </body>
 </html>
-
