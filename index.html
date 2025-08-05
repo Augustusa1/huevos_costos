@@ -174,6 +174,13 @@
                     <div id="table-container-maple-cbba"></div>
                 </div>
             </section>
+             <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-blue-200">
+                <h2 class="text-2xl font-bold text-blue-700 mb-2 text-center">Análisis de Transporte</h2>
+                <p class="text-md text-blue-600 text-center mb-6">Análisis de Costos y Ruta CBBA</p>
+                <div class="overflow-x-auto">
+                    <div id="table-container-transporte-cbba"></div>
+                </div>
+            </section>
             <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-blue-200">
                 <h2 class="text-2xl font-bold text-blue-700 mb-2 text-center">Análisis por Canal</h2>
                 <p class="text-md text-blue-600 text-center mb-6">Análisis de Costos y Ruta CBBA</p>
@@ -226,6 +233,9 @@
         const datosCBBA = {
             logistica: [
                 { mes: 'jul. 2024', transp_kg: 0.67, alm_kg: 0.41, transp_maple: 1.21, alm_maple: 0.74 }, { mes: 'ago. 2024', transp_kg: 0.72, alm_kg: 0.46, transp_maple: 1.31, alm_maple: 0.84 }, { mes: 'sep. 2024', transp_kg: 0.50, alm_kg: 0.50, transp_maple: 0.92, alm_maple: 0.92 }, { mes: 'oct. 2024', transp_kg: 0.88, alm_kg: 0.80, transp_maple: 1.63, alm_maple: 1.48 }, { mes: 'nov. 2024', transp_kg: 0.51, alm_kg: 0.55, transp_maple: 0.91, alm_maple: 0.99 }, { mes: 'dic. 2024', transp_kg: 0.76, alm_kg: 0.98, transp_maple: 1.41, alm_maple: 1.82 }, { mes: 'ene. 2025', transp_kg: 0.89, alm_kg: 0.78, transp_maple: 1.70, alm_maple: 1.49 }, { mes: 'feb. 2025', transp_kg: 0.84, alm_kg: 0.88, transp_maple: 1.59, alm_maple: 1.65 }, { mes: 'mar. 2025', transp_kg: 0.55, alm_kg: 1.03, transp_maple: 1.06, alm_maple: 1.97 }, { mes: 'abr. 2025', transp_kg: 0.45, alm_kg: 0.85, transp_maple: 0.87, alm_maple: 1.63 }, { mes: 'may. 2025', transp_kg: 0.58, alm_kg: 1.37, transp_maple: 1.10, alm_maple: 2.59 }, { mes: 'jun. 2025', transp_kg: 0.69, alm_kg: 1.74, transp_maple: 1.24, alm_maple: 3.12 },
+            ],
+             transporte: [
+                { mes: 'jun. 2024', clientes: 12, cap_kg: 13.82, cap_maples_100: 22 }, { mes: 'jul. 2024', clientes: 15, cap_kg: 15.51, cap_maples_100: 25 }, { mes: 'ago. 2024', clientes: 17, cap_kg: 18.18, cap_maples_100: 29 }, { mes: 'sep. 2024', clientes: 18, cap_kg: 18.36, cap_maples_100: 29 }, { mes: 'oct. 2024', clientes: 16, cap_kg: 15.43, cap_maples_100: 24 }, { mes: 'nov. 2024', clientes: 18, cap_kg: 19.27, cap_maples_100: 31 }, { mes: 'dic. 2024', clientes: 15, cap_kg: 15.73, cap_maples_100: 27 }, { mes: 'ene. 2025', clientes: 17, cap_kg: 15.04, cap_maples_100: 26 }, { mes: 'feb. 2025', clientes: 18, cap_kg: 16.17, cap_maples_100: 27 }, { mes: 'mar. 2025', clientes: 16, cap_kg: 17.05, cap_maples_100: 27 }, { mes: 'abr. 2025', clientes: 13, cap_kg: 17.77, cap_maples_100: 29 }, { mes: 'may. 2025', clientes: 14, cap_kg: 22.62, cap_maples_100: 35 }, { mes: 'jun. 2025', clientes: 10, cap_kg: 22.15, cap_maples_100: 35 }, { mes: 'jul. 2025', clientes: 13, cap_kg: 20.85, cap_maples_100: 34 },
             ],
              canal: [
                 { supracanal: 'OFF PREMISE', canal: 'ALMACEN', maples: 7438.00, dropsize_maple: 32.34, kilos: 13440.03, dropsize_kg: 58.43 }, { supracanal: 'OFF PREMISE', canal: 'DISTRIBUIDORES', maples: 238.00, dropsize_maple: 79.33, kilos: 465.59, dropsize_kg: 155.20 }, { supracanal: 'OFF PREMISE', canal: 'FARMACIA', maples: 91.00, dropsize_maple: 6.07, kilos: 177.83, dropsize_kg: 11.86 }, { supracanal: 'OFF PREMISE', canal: 'FRIALES', maples: 76687.20, dropsize_maple: 18.35, kilos: 158059.29, dropsize_kg: 37.82 }, { supracanal: 'OFF PREMISE', canal: 'HOGAR', maples: 451.00, dropsize_maple: 7.91, kilos: 863.77, dropsize_kg: 15.15 }, { supracanal: 'OFF PREMISE', canal: 'MAYORISTAS', maples: 0, dropsize_maple: 0, kilos: 0, dropsize_kg: 0 }, { supracanal: 'OFF PREMISE', canal: 'MICROMERCADOS', maples: 4688.00, dropsize_maple: 9.55, kilos: 9130.07, dropsize_kg: 18.59 }, { supracanal: 'OFF PREMISE', canal: 'PUESTO DE MERCADO', maples: 25205.00, dropsize_maple: 14.36, kilos: 52375.58, dropsize_kg: 29.84 }, { supracanal: 'OFF PREMISE', canal: 'SUPERMERCADOS', maples: 24792.40, dropsize_maple: 47.31, kilos: 45462.57, dropsize_kg: 86.76 }, { supracanal: 'OFF PREMISE', canal: 'TIENDAS', maples: 44987.20, dropsize_maple: 7.77, kilos: 91420.41, dropsize_kg: 15.80 }, { supracanal: 'OFF PREMISE', canal: 'TIENDAS ESPECIALIZADA', maples: 3268.20, dropsize_maple: 30.26, kilos: 6002.42, dropsize_kg: 55.58 }, { supracanal: 'OFF PREMISE', canal: 'VETERINARIAS', maples: 109.00, dropsize_maple: 9.08, kilos: 202.44, dropsize_kg: 16.87 }, { supracanal: 'ON PREMISE', canal: 'CHURRASQUERIAS', maples: 344.00, dropsize_maple: 7.32, kilos: 752.27, dropsize_kg: 16.01 }, { supracanal: 'ON PREMISE', canal: 'HAMBURGUESERIAS', maples: 10.00, dropsize_maple: 5.00, kilos: 21.30, dropsize_kg: 10.65 }, { supracanal: 'ON PREMISE', canal: 'INSTITUCIONES', maples: 3157.80, dropsize_maple: 14.76, kilos: 6531.29, dropsize_kg: 30.52 }, { supracanal: 'ON PREMISE', canal: 'PIZZERIAS', maples: 137.00, dropsize_maple: 5.27, kilos: 273.46, dropsize_kg: 10.52 }, { supracanal: 'ON PREMISE', canal: 'POLLERIAS', maples: 5829.00, dropsize_maple: 16.28, kilos: 11065.83, dropsize_kg: 30.91 }, { supracanal: 'ON PREMISE', canal: 'RECREATIVO', maples: 1523.00, dropsize_maple: 10.65, kilos: 2955.67, dropsize_kg: 20.67 }, { supracanal: 'ON PREMISE', canal: 'RESTAURANTES', maples: 8994.40, dropsize_maple: 13.99, kilos: 18855.77, dropsize_kg: 29.32 }, { supracanal: 'ON PREMISE', canal: 'VENTA AL PASO', maples: 17095.00, dropsize_maple: 34.89, kilos: 34590.82, dropsize_kg: 70.59 },
@@ -301,10 +311,11 @@
             const container = document.getElementById(containerId);
             if (!container) return;
 
-            const calculateAverage = (arr) => {
-                if (!arr || arr.length === 0) return '0.00';
+            const calculateAverage = (arr, isInt = false) => {
+                if (!arr || arr.length === 0) return isInt ? '0' : '0.00';
                 const sum = arr.reduce((acc, val) => acc + val, 0);
-                return Math.round(sum / arr.length).toFixed(0);
+                const avg = sum / arr.length;
+                return isInt ? Math.round(avg).toString() : avg.toFixed(2);
             };
 
             const monthsHeader = data.map(d => `<th class="p-3 text-sm font-semibold tracking-wide text-left">${d.mes}</th>`).join('');
@@ -312,8 +323,8 @@
             let rowsHTML = '';
             for (const concept of concepts) {
                 const values = data.map(d => d[concept.key]);
-                const avg = calculateAverage(values);
-                const cells = values.map(val => `<td class="p-3 text-sm text-gray-700 whitespace-nowrap">${val}${concept.unit || ''}</td>`).join('');
+                const avg = calculateAverage(values, concept.isInt);
+                const cells = values.map(val => `<td class="p-3 text-sm text-gray-700 whitespace-nowrap">${typeof val === 'number' && !concept.isInt ? val.toFixed(2) : val}${concept.unit || ''}</td>`).join('');
                 rowsHTML += `
                     <tr class="bg-white hover:bg-gray-50 transition-colors duration-200">
                         <td class="p-3 text-sm text-gray-700 font-medium sticky left-0 bg-white z-10">${concept.label}</td>
@@ -440,19 +451,26 @@
             createKpiTable('table-container-maple-cbba', datosCBBA.logistica, 'maple', themes.cbba);
             
             const conceptsSCZ = [
-                { key: 'clientes', label: 'Clientes por Camión' },
+                { key: 'clientes', label: 'Clientes por Camión', isInt: true },
                 { key: 'cap_kg', label: 'Capacidad en KG (%)', unit: '%' },
                 { key: 'cap_maples', label: 'Uso de Cap. en Maples (%)', unit: '%' }
             ];
             createTransportTable('table-container-transporte-scz', datosSCZ.transporte, themes.scz, conceptsSCZ);
 
             const conceptsLPZ = [
-                { key: 'clientes', label: 'Clientes por Camión' },
+                { key: 'clientes', label: 'Clientes por Camión', isInt: true },
                 { key: 'cap_kg', label: 'Capacidad en KG (%)', unit: '%' },
                 { key: 'cap_maples_100', label: 'Capacidad en Maples al 100% (%)', unit: '%' }
             ];
             createTransportTable('table-container-transporte-lpz', datosLPZ.transporte, themes.lpz, conceptsLPZ);
             
+            const conceptsCBBA = [
+                { key: 'clientes', label: 'Clientes por Camión', isInt: true },
+                { key: 'cap_kg', label: 'Capacidad en KG (%)', unit: '%' },
+                { key: 'cap_maples_100', label: 'Capacidad en Maples al 100% (%)', unit: '%' }
+            ];
+            createTransportTable('table-container-transporte-cbba', datosCBBA.transporte, themes.cbba, conceptsCBBA);
+
             createCanalTable('table-container-canal-lpz', datosLPZ.canal, themes.lpz);
             createCanalTable('table-container-canal-scz', datosSCZ.canal, themes.scz);
             createCanalTable('table-container-canal-cbba', datosCBBA.canal, themes.cbba);
