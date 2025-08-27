@@ -6,6 +6,7 @@
     <title>Análisis Costos Logísticos de Huevos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-trendline"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
@@ -73,6 +74,9 @@
                 <div class="overflow-x-auto">
                     <div id="table-container-kg-nacional"></div>
                 </div>
+                 <div class="chart-container mt-8">
+                    <canvas id="simulationChart"></canvas>
+                </div>
             </section>
             <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-red-200">
                 <h2 class="text-2xl font-bold text-red-700 mb-6 text-center">Costos por Maple (Bs/Maple)</h2>
@@ -98,7 +102,7 @@
         <div id="scz-view" class="view-container space-y-12 hidden">
             <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-green-200">
                 <h2 class="text-2xl font-bold text-green-700 mb-2 text-center">Costos por Kilogramo (Bs/Kg)</h2>
-                <p class="text-md text-green-600 text-center mb-6">Análisis de Costos y Ruta SCZ</p>
+                 <p class="text-md text-green-600 text-center mb-6">Análisis de Costos y Ruta SCZ</p>
                 <div class="overflow-x-auto">
                     <div id="table-container-kg-scz"></div>
                 </div>
@@ -203,6 +207,9 @@
             ],
             cuentasAlmacenamiento: [
                 { cuenta: 'Sueldos Y Jornales', valor: 26015 }, { cuenta: 'Sistemas tecnologicos', valor: 1421 }, { cuenta: 'Servicios Externos', valor: 25449 }, { cuenta: 'Ropa De Trabajo', valor: 500 }, { cuenta: 'Pasajes Y Viaticos', valor: 61 }, { cuenta: 'Materiales Escritorio Y Suministros', valor: 2204 }, { cuenta: 'Material Y Prod.Limpieza', valor: 431 }, { cuenta: 'Mantenimiento Y Repuestos', valor: 5344 }, { cuenta: 'Horas Extras', valor: 4680 }, { cuenta: 'Gastos Medicos Y Capacitacion', valor: 527 }, { cuenta: 'Gastos legales y tributarios', valor: 496 }, { cuenta: 'Gastos Generales', valor: 1240 }, { cuenta: 'Gastos De Alimentacion', valor: 2048 }, { cuenta: 'Envases', valor: 0 }, { cuenta: 'Energia Electrica Y Agua', valor: 3763 }, { cuenta: 'Depreciacion', valor: 10619 }, { cuenta: 'Costo de Servicios Internos', valor: 2551 }, { cuenta: 'Costo Almacenaje Mat. Y Sum.', valor: 331 }, { cuenta: 'Cconectividad y comunicaciones', valor: 427 }, { cuenta: 'Beneficios Sociales', valor: 25109 }, { cuenta: 'Baja De Productos', valor: 2753 },
+            ],
+            simulacionAlmacenamiento: [
+                { mes: 'jul-25', valor: 0.46 }, { mes: 'ago-25', valor: 0.48 }, { mes: 'sep-25', valor: 0.44 }, { mes: 'oct-25', valor: 0.40 }, { mes: 'nov-25', valor: 0.26 }, { mes: 'dic-25', valor: 0.45 }, { mes: 'ene-26', valor: 0.42 }, { mes: 'feb-26', valor: 0.36 }, { mes: 'mar-26', valor: 0.37 }, { mes: 'oct-26', valor: 0.38 }, { mes: 'may-26', valor: 0.39 }, { mes: 'jun-26', valor: 0.43 },
             ]
         };
 
