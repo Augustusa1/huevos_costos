@@ -6,7 +6,7 @@
     <title>Análisis Costos Logísticos de Huevos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-trendline"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
@@ -74,9 +74,6 @@
                 <div class="overflow-x-auto">
                     <div id="table-container-kg-nacional"></div>
                 </div>
-                 <div class="chart-container mt-8">
-                    <canvas id="simulationChart"></canvas>
-                </div>
             </section>
             <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-red-200">
                 <h2 class="text-2xl font-bold text-red-700 mb-6 text-center">Costos por Maple (Bs/Maple)</h2>
@@ -105,6 +102,9 @@
                  <p class="text-md text-green-600 text-center mb-6">Análisis de Costos y Ruta SCZ</p>
                 <div class="overflow-x-auto">
                     <div id="table-container-kg-scz"></div>
+                </div>
+                 <div class="chart-container mt-8">
+                    <canvas id="simulationChartScz"></canvas>
                 </div>
             </section>
             <section class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-green-200">
@@ -207,9 +207,6 @@
             ],
             cuentasAlmacenamiento: [
                 { cuenta: 'Sueldos Y Jornales', valor: 26015 }, { cuenta: 'Sistemas tecnologicos', valor: 1421 }, { cuenta: 'Servicios Externos', valor: 25449 }, { cuenta: 'Ropa De Trabajo', valor: 500 }, { cuenta: 'Pasajes Y Viaticos', valor: 61 }, { cuenta: 'Materiales Escritorio Y Suministros', valor: 2204 }, { cuenta: 'Material Y Prod.Limpieza', valor: 431 }, { cuenta: 'Mantenimiento Y Repuestos', valor: 5344 }, { cuenta: 'Horas Extras', valor: 4680 }, { cuenta: 'Gastos Medicos Y Capacitacion', valor: 527 }, { cuenta: 'Gastos legales y tributarios', valor: 496 }, { cuenta: 'Gastos Generales', valor: 1240 }, { cuenta: 'Gastos De Alimentacion', valor: 2048 }, { cuenta: 'Envases', valor: 0 }, { cuenta: 'Energia Electrica Y Agua', valor: 3763 }, { cuenta: 'Depreciacion', valor: 10619 }, { cuenta: 'Costo de Servicios Internos', valor: 2551 }, { cuenta: 'Costo Almacenaje Mat. Y Sum.', valor: 331 }, { cuenta: 'Cconectividad y comunicaciones', valor: 427 }, { cuenta: 'Beneficios Sociales', valor: 25109 }, { cuenta: 'Baja De Productos', valor: 2753 },
-            ],
-            simulacionAlmacenamiento: [
-                { mes: 'jul-25', valor: 0.46 }, { mes: 'ago-25', valor: 0.48 }, { mes: 'sep-25', valor: 0.44 }, { mes: 'oct-25', valor: 0.40 }, { mes: 'nov-25', valor: 0.26 }, { mes: 'dic-25', valor: 0.45 }, { mes: 'ene-26', valor: 0.42 }, { mes: 'feb-26', valor: 0.36 }, { mes: 'mar-26', valor: 0.37 }, { mes: 'oct-26', valor: 0.38 }, { mes: 'may-26', valor: 0.39 }, { mes: 'jun-26', valor: 0.43 },
             ]
         };
 
@@ -222,6 +219,9 @@
             ],
             canal: [
                 { supracanal: 'OFF PREMISE', canal: 'ALMACEN', maples: 85572.80, dropsize_maple: 54.33, kilos: 153415.63, dropsize_kg: 97.41 }, { supracanal: 'OFF PREMISE', canal: 'DISTRIBUIDORES', maples: 186933.00, dropsize_maple: 1074.33, kilos: 324428.68, dropsize_kg: 1864.53 }, { supracanal: 'OFF PREMISE', canal: 'FARMACIA', maples: 6.80, dropsize_maple: 2.27, kilos: 11.73, dropsize_kg: 3.91 }, { supracanal: 'OFF PREMISE', canal: 'FRIALES', maples: 93266.00, dropsize_maple: 54.07, kilos: 169646.21, dropsize_kg: 98.35 }, { supracanal: 'OFF PREMISE', canal: 'HOGAR', maples: 2843.40, dropsize_maple: 10.98, kilos: 5790.66, dropsize_kg: 22.36 }, { supracanal: 'OFF PREMISE', canal: 'MAYORISTAS', maples: 45031.00, dropsize_maple: 158.56, kilos: 82483.27, dropsize_kg: 290.43 }, { supracanal: 'OFF PREMISE', canal: 'MICROMERCADOS', maples: 104264.00, dropsize_maple: 12.68, kilos: 187905.26, dropsize_kg: 22.85 }, { supracanal: 'OFF PREMISE', canal: 'PUESTO DE MERCADO', maples: 565461.60, dropsize_maple: 52.44, kilos: 1054657.90, dropsize_kg: 97.81 }, { supracanal: 'OFF PREMISE', canal: 'SUPERMERCADOS', maples: 129785.20, dropsize_maple: 50.54, kilos: 237070.23, dropsize_kg: 92.32 }, { supracanal: 'OFF PREMISE', canal: 'TIENDAS', maples: 152741.30, dropsize_maple: 9.74, kilos: 298708.95, dropsize_kg: 19.05 }, { supracanal: 'OFF PREMISE', canal: 'TIENDAS ESPECIALIZADA', maples: 11940.20, dropsize_maple: 40.89, kilos: 22106.99, dropsize_kg: 75.71 }, { supracanal: 'OFF PREMISE', canal: 'VETERINARIAS', maples: 790.00, dropsize_maple: 10.13, kilos: 1505.16, dropsize_kg: 19.30 }, { supracanal: 'ON PREMISE', canal: 'CHURRASQUERIAS', maples: 6841.00, dropsize_maple: 9.38, kilos: 13055.90, dropsize_kg: 17.91 }, { supracanal: 'ON PREMISE', canal: 'HAMBURGUESERIAS', maples: 4976.00, dropsize_maple: 8.46, kilos: 9566.56, dropsize_kg: 16.27 }, { supracanal: 'ON PREMISE', canal: 'INSTITUCIONES', maples: 69146.00, dropsize_maple: 25.55, kilos: 133478.62, dropsize_kg: 49.33 }, { supracanal: 'ON PREMISE', canal: 'PIZZERIAS', maples: 4526.00, dropsize_maple: 13.23, kilos: 8868.71, dropsize_kg: 25.93 }, { supracanal: 'ON PREMISE', canal: 'POLLERIAS', maples: 37667.00, dropsize_maple: 17.22, kilos: 79300.25, dropsize_kg: 36.24 }, { supracanal: 'ON PREMISE', canal: 'RECREATIVO', maples: 21094.00, dropsize_maple: 14.90, kilos: 40708.21, dropsize_kg: 28.75 }, { supracanal: 'ON PREMISE', canal: 'RESTAURANTES', maples: 43664.00, dropsize_maple: 11.01, kilos: 87946.71, dropsize_kg: 22.18 }, { supracanal: 'ON PREMISE', canal: 'VENTA AL PASO', maples: 33177.00, dropsize_maple: 41.11, kilos: 67479.40, dropsize_kg: 83.62 },
+            ],
+            simulacionAlmacenamiento: [
+                { mes: 'jul-25', valor: 0.46 }, { mes: 'ago-25', valor: 0.48 }, { mes: 'sep-25', valor: 0.44 }, { mes: 'oct-25', valor: 0.40 }, { mes: 'nov-25', valor: 0.26 }, { mes: 'dic-25', valor: 0.45 }, { mes: 'ene-26', valor: 0.42 }, { mes: 'feb-26', valor: 0.36 }, { mes: 'mar-26', valor: 0.37 }, { mes: 'abr-26', valor: 0.38 }, { mes: 'may-26', valor: 0.39 }, { mes: 'jun-26', valor: 0.43 },
             ]
         };
         
@@ -445,6 +445,81 @@
             });
         };
 
+        const createSimulationChart = (canvasId, realData, simData, theme) => {
+            const container = document.getElementById(canvasId);
+            if (!container) return;
+            Chart.register(ChartDataLabels);
+
+            const labels = ['Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'];
+            const realValues = realData.map(d => d.alm_kg);
+            const simValues = simData.map(d => d.valor);
+
+            new Chart(container.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Costo Real 2024-2025 (Bs/Kg)',
+                            data: realValues,
+                            borderColor: theme.chart.bar.replace('0.6', '1'),
+                            backgroundColor: theme.chart.bar.replace('0.6', '1'),
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Costo Simulación 2025-2026 (Bs/Kg)',
+                            data: simValues,
+                            borderColor: 'rgba(107, 114, 128, 1)',
+                            backgroundColor: 'rgba(107, 114, 128, 1)',
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Costo (Bs/Kg)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        datalabels: {
+                            align: 'top',
+                            formatter: (value, context) => {
+                                if (context.datasetIndex === 1) { // Simulation data
+                                    const realValue = realValues[context.dataIndex];
+                                    const diff = value - realValue;
+                                    const sign = diff >= 0 ? '+' : '-';
+                                    return `${value.toFixed(2)}\n(Gap: ${sign}${Math.abs(diff).toFixed(2)})`;
+                                }
+                                return value.toFixed(2);
+                            },
+                             font: {
+                                weight: 'bold'
+                            },
+                            color: (context) => context.dataset.borderColor
+                        },
+                        title: {
+                            display: true,
+                            text: 'Comparación Costo Almacenamiento: Real vs. Simulación',
+                            font: {
+                                size: 18
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    }
+                }
+            });
+        };
+
         // --- 4. LÓGICA DE LA APLICACIÓN ---
         window.onload = () => {
             // Renderizado inicial
@@ -493,6 +568,7 @@
             
             createParetoChart('paretoChartTransporte', datosNacional.cuentasTransporte, themes.nacional, true, transporteTooltip);
             createParetoChart('paretoChartAlmacenamiento', datosNacional.cuentasAlmacenamiento, themes.nacional, false, almacenamientoTooltipNacional);
+            createSimulationChart('simulationChartScz', datosSCZ.logistica, datosSCZ.simulacionAlmacenamiento, themes.scz);
             
             // Lógica de pestañas
             const tabs = document.querySelectorAll('.tab-button');
